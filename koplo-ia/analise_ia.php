@@ -45,7 +45,6 @@ if (file_exists($caminho_env)) {
     } else {
         $hf_token = "";
     }
-
 } else {
     $hf_token = "";
 }
@@ -66,11 +65,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["enviar_pergunta"])) {
     if ($pergunta_usuario === "") {
 
         $erro_ia = "Digite uma pergunta.";
-
     } elseif ($hf_token === "") {
 
         $erro_ia = "Token do Hugging Face não encontrado.";
-
     } else {
 
         $usuario_id = $_SESSION["usuario_id"];
@@ -109,7 +106,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["enviar_pergunta"])) {
             $stmt->execute();
 
             $resultado = $stmt->get_result();
-
         } else {
 
             $resultado = false;
@@ -302,16 +298,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["enviar_pergunta"])) {
                     "nome" => $meta["nome"],
 
                     "valor_objetivo" =>
-                        $valor_objetivo,
+                    $valor_objetivo,
 
                     "valor_atual" =>
-                        $valor_atual,
+                    $valor_atual,
 
                     "data_limite" =>
-                        $meta["data_limite"],
+                    $meta["data_limite"],
 
                     "percentual" =>
-                        $percentual
+                    $percentual
                 ];
             }
 
@@ -349,7 +345,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["enviar_pergunta"])) {
                     . $valor_formatado
                     . "\n";
             }
-
         } else {
 
             $texto_categorias =
@@ -377,7 +372,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["enviar_pergunta"])) {
                 . $maior_despesa["categoria"]
                 . " | Data: "
                 . $maior_despesa["data"];
-
         } else {
 
             $maior_despesa_texto =
@@ -418,7 +412,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["enviar_pergunta"])) {
                     . $transacao["data"]
                     . "\n";
             }
-
         } else {
 
             $texto_transacoes =
@@ -477,7 +470,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["enviar_pergunta"])) {
                     . $meta["data_limite"]
                     . "\n";
             }
-
         } else {
 
             $texto_metas =
@@ -640,10 +632,10 @@ Apenas utilize os dados fornecidos pelo sistema.
             $mensagens_para_api[] = [
 
                 "role" =>
-                    $mensagem["role"],
+                $mensagem["role"],
 
                 "content" =>
-                    $mensagem["content"]
+                $mensagem["content"]
             ];
         }
 
@@ -675,7 +667,7 @@ Apenas utilize os dados fornecidos pelo sistema.
             "model" => $modelo,
 
             "messages" =>
-                $mensagens_para_api,
+            $mensagens_para_api,
 
             "max_tokens" => 500,
 
@@ -699,12 +691,12 @@ Apenas utilize os dados fornecidos pelo sistema.
             CURLOPT_POST => true,
 
             CURLOPT_POSTFIELDS =>
-                json_encode($data),
+            json_encode($data),
 
             CURLOPT_HTTPHEADER => [
 
                 "Authorization: Bearer "
-                . $hf_token,
+                    . $hf_token,
 
                 "Content-Type: application/json"
             ],
@@ -741,7 +733,6 @@ Apenas utilize os dados fornecidos pelo sistema.
             $erro_ia =
                 "Erro ao conectar com a IA: "
                 . $curl_error;
-
         } else {
 
             $resposta_json =
@@ -774,7 +765,7 @@ Apenas utilize os dados fornecidos pelo sistema.
                     "role" => "user",
 
                     "content" =>
-                        $pergunta_usuario
+                    $pergunta_usuario
                 ];
 
 
@@ -787,7 +778,7 @@ Apenas utilize os dados fornecidos pelo sistema.
                     "role" => "assistant",
 
                     "content" =>
-                        $resposta_ia
+                    $resposta_ia
                 ];
 
 
@@ -807,8 +798,6 @@ Apenas utilize os dados fornecidos pelo sistema.
                             -20
                         );
                 }
-
-
             } else {
 
                 $mensagem_erro_api = "";
@@ -832,13 +821,11 @@ Apenas utilize os dados fornecidos pelo sistema.
                             json_encode(
                                 $resposta_json["error"]
                             );
-
                     } else {
 
                         $mensagem_erro_api =
                             $resposta_json["error"];
                     }
-
                 } else {
 
                     $mensagem_erro_api =
@@ -870,349 +857,454 @@ Apenas utilize os dados fornecidos pelo sistema.
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+        content="width=device-width, initial-scale=1.0">
 
     <title>Koplo IA</title>
 
 
     <link
         rel="stylesheet"
-        href="dashboard.css"
-    >
+        href="dashboard.css">
 
 
     <style>
-
-        .chat-card {
-
-            background: #ffffff;
-
-            border-radius: 20px;
-
-            box-shadow:
-                0 4px 20px rgba(0, 0, 0, 0.08);
-
-            overflow: hidden;
-
-            max-width: 1000px;
-
-            margin: 30px auto;
-        }
-
-
-        .chat-header {
-
+        /* ======================================================
+       ESTRUTURA PRINCIPAL
+    ====================================================== */
+        .content {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            min-height: 100vh;
+            padding: 32px 40px;
             display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            padding: 20px 25px;
-
-            border-bottom:
-                1px solid #eeeeee;
+            flex-direction: column;
         }
 
+        /* CARD DO CHAT (Estilo Painel Pro) */
+        .chat-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 12px 32px -4px rgba(9, 35, 51, 0.04), 0 4px 12px -2px rgba(9, 35, 51, 0.02);
+            overflow: hidden;
+            max-width: 960px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 104px);
+        }
+
+        /* ======================================================
+       CABEÇALHO
+    ====================================================== */
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 28px;
+            background: #ffffff;
+            border-bottom: 1px solid #edf2f7;
+        }
 
         .chat-header-left {
-
             display: flex;
-
             align-items: center;
-
-            gap: 15px;
+            gap: 16px;
         }
-
 
         .ai-avatar {
-
-            width: 48px;
-
-            height: 48px;
-
-            border-radius: 50%;
-
-            background: #001f3f;
-
-            color: white;
-
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #092333 0%, #123c4e 100%);
+            color: #31c48d;
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
-            font-weight: bold;
-
-            font-size: 18px;
+            font-weight: 700;
+            font-size: 19px;
+            letter-spacing: -0.5px;
+            box-shadow: 0 6px 16px rgba(9, 35, 51, 0.12);
+            position: relative;
         }
 
+        .chat-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
 
         .chat-title {
-
-            font-size: 18px;
-
+            font-size: 17px;
             font-weight: 700;
-
-            color: #222;
+            color: #092333;
+            letter-spacing: -0.4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
+        .badge-ia {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            background: rgba(49, 196, 141, 0.12);
+            color: #1e8e63;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
 
         .chat-status {
-
-            font-size: 13px;
-
-            color: #777;
-
-            margin-top: 3px;
+            font-size: 12px;
+            color: #647784;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
+        /* Indicador Pulsante */
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background-color: #31c48d;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 2px rgba(49, 196, 141, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(49, 196, 141, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(49, 196, 141, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(49, 196, 141, 0);
+            }
+        }
 
         .nova-conversa-btn {
-
-            border: 1px solid #ddd;
-
-            background: white;
-
-            color: #333;
-
-            padding: 10px 15px;
-
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #092333;
+            padding: 9px 18px;
             border-radius: 10px;
-
             cursor: pointer;
-
             font-size: 13px;
-
-            transition: 0.2s;
+            font-weight: 600;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-
 
         .nova-conversa-btn:hover {
-
-            background: #f5f5f5;
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
         }
 
-
+        /* ======================================================
+       ÁREA DE MENSAGENS
+    ====================================================== */
         .chat-messages {
-
-            height: 500px;
-
+            flex: 1;
             overflow-y: auto;
-
-            padding: 25px;
-
-            background: #f8f9fb;
-
+            padding: 28px;
+            background: #f5f7f9;
             display: flex;
-
             flex-direction: column;
-
-            gap: 15px;
+            gap: 20px;
         }
 
+        .chat-messages::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
 
         .message {
-
             display: flex;
-
             width: 100%;
         }
 
-
         .message.user {
-
             justify-content: flex-end;
         }
 
-
         .message.ai {
-
             justify-content: flex-start;
         }
 
-
         .message-bubble {
-
-            max-width: 75%;
-
-            padding: 13px 17px;
-
+            max-width: 72%;
+            padding: 16px 20px;
             border-radius: 16px;
-
-            line-height: 1.5;
-
-            font-size: 14px;
-
-            white-space: pre-wrap;
-
+            line-height: 1.6;
+            font-size: 14.5px;
+            white-space: pre-line;
             word-wrap: break-word;
+            letter-spacing: -0.1px;
         }
 
-
+        /* Balão do Usuário */
         .message.user .message-bubble {
-
-            background: #001f3f;
-
-            color: white;
-
-            border-bottom-right-radius: 5px;
+            background: #092333;
+            color: #ffffff;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 14px rgba(9, 35, 51, 0.08);
+            border-left: 3px solid #31c48d;
         }
 
-
+        /* Balão da IA */
         .message.ai .message-bubble {
-
-            background: white;
-
-            color: #333;
-
-            border: 1px solid #eeeeee;
-
-            border-bottom-left-radius: 5px;
+            background: #ffffff;
+            color: #17212b;
+            border: 1px solid #e2e8f0;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
         }
 
-
+        /* ======================================================
+       CAMPO DE ENTRADA (DOCK FLUTUANTE)
+    ====================================================== */
         .chat-input-area {
-
-            padding: 20px;
-
-            border-top:
-                1px solid #eeeeee;
-
-            background: white;
+            padding: 20px 28px;
+            border-top: 1px solid #edf2f7;
+            background: #ffffff;
         }
-
 
         .chat-form {
-
             display: flex;
-
-            gap: 10px;
+            align-items: center;
+            gap: 12px;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 6px 8px 6px 18px;
+            transition: all 0.2s ease;
         }
 
+        .chat-form:focus-within {
+            background: #ffffff;
+            border-color: #31c48d;
+            box-shadow: 0 0 0 4px rgba(49, 196, 141, 0.12);
+        }
 
         .chat-input {
-
             flex: 1;
-
-            border: 1px solid #ddd;
-
-            border-radius: 12px;
-
-            padding: 13px 15px;
-
-            font-size: 14px;
-
+            border: none;
+            background: transparent;
+            font-size: 14.5px;
+            color: #17212b;
             outline: none;
+            padding: 8px 0;
         }
 
-
-        .chat-input:focus {
-
-            border-color: #001f3f;
+        .chat-input::placeholder {
+            color: #94a3b8;
         }
-
 
         .chat-send {
-
             border: none;
-
-            background: #001f3f;
-
-            color: white;
-
+            background: #31c48d;
+            color: #ffffff;
+            height: 42px;
             padding: 0 22px;
-
-            border-radius: 12px;
-
+            border-radius: 10px;
             cursor: pointer;
-
             font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
-
 
         .chat-send:hover {
-
-            opacity: 0.9;
+            background: #28a777;
+            box-shadow: 0 4px 14px rgba(49, 196, 141, 0.3);
+            transform: translateY(-1px);
         }
 
+        .chat-send:active {
+            transform: translateY(0);
+        }
 
+        /* ======================================================
+       ALERTAS E ERROS
+    ====================================================== */
         .erro-ia {
-
-            margin: 15px 20px;
-
-            padding: 12px 15px;
-
-            background: #ffecec;
-
-            color: #b00020;
-
+            margin: 0 28px 16px;
+            padding: 12px 16px;
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
             border-radius: 10px;
-
-            font-size: 14px;
+            font-size: 13.5px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-
-        @media (max-width: 600px) {
+        /* ======================================================
+       RESPONSIVIDADE
+    ====================================================== */
+        @media (max-width: 768px) {
+            .content {
+                margin-left: 0;
+                width: 100%;
+                padding: 16px;
+            }
 
             .chat-card {
-
-                margin: 15px 10px;
-
-                border-radius: 15px;
+                height: calc(100vh - 32px);
+                border-radius: 16px;
             }
-
 
             .chat-header {
-
-                padding: 15px;
+                padding: 16px 20px;
             }
-
-
-            .chat-title {
-
-                font-size: 16px;
-            }
-
-
-            .nova-conversa-btn {
-
-                padding: 8px 10px;
-
-                font-size: 12px;
-            }
-
 
             .chat-messages {
-
-                height: 450px;
-
-                padding: 15px;
+                padding: 20px 16px;
             }
-
 
             .message-bubble {
-
                 max-width: 85%;
-
-                font-size: 13px;
             }
 
+            .chat-input-area {
+                padding: 16px;
+            }
 
             .chat-form {
-
-                flex-direction: column;
-            }
-
-
-            .chat-send {
-
-                height: 45px;
+                padding: 4px 6px 4px 14px;
             }
         }
 
+        /* ======================================================
+   ESTRUTURA DAS MENSAGENS E AVATARES
+====================================================== */
+        .message {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.ai {
+            justify-content: flex-start;
+        }
+
+        .message-content {
+            display: flex;
+            flex-direction: column;
+            max-width: 72%;
+        }
+
+        .message.user .message-content {
+            align-items: flex-end;
+        }
+
+        .message.ai .message-content {
+            align-items: flex-start;
+        }
+
+        /* Nome do Autor acima do balão */
+        .message-author {
+            font-size: 11px;
+            font-weight: 600;
+            color: #647784;
+            margin-bottom: 4px;
+            padding: 0 4px;
+        }
+
+        /* Base do Avatar */
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: 700;
+            font-size: 14px;
+            margin-top: 18px;
+            /* Alinha com a caixa do balão */
+        }
+
+        /* Avatar da IA */
+        .message-avatar.ai-icon {
+            background: linear-gradient(135deg, #092333 0%, #123c4e 100%);
+            color: #31c48d;
+            border: 1px solid rgba(49, 196, 141, 0.2);
+            box-shadow: 0 2px 8px rgba(9, 35, 51, 0.08);
+        }
+
+        /* Avatar do Usuário */
+        .message-avatar.user-icon {
+            background: #ffffff;
+            color: #092333;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+        }
+
+        .message-avatar.user-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: #092333;
+        }
+
+        /* Balões de Fala Ajustados */
+        .message-bubble {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            line-height: 1.6;
+            font-size: 14.5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            letter-spacing: -0.1px;
+        }
+
+        .message.user .message-bubble {
+            background: #092333;
+            color: #ffffff;
+            border-top-right-radius: 2px;
+            border-left: 3px solid #31c48d;
+            box-shadow: 0 4px 14px rgba(9, 35, 51, 0.08);
+        }
+
+        .message.ai .message-bubble {
+            background: #ffffff;
+            color: #17212b;
+            border: 1px solid #e2e8f0;
+            border-top-left-radius: 2px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+        }
     </style>
 
 </head>
@@ -1221,179 +1313,172 @@ Apenas utilize os dados fornecidos pelo sistema.
 <body>
 
 
-<div class="layout">
+    <div class="layout">
 
 
-    <?php include "sidebar.php"; ?>
+        <?php include "sidebar.php"; ?>
 
 
-    <main class="content">
+        <main class="content">
 
 
-        <div class="chat-card">
+            <div class="chat-card">
 
 
-            <!-- CABEÇALHO -->
+                <!-- CABEÇALHO -->
 
-            <div class="chat-header">
-
-
-                <div class="chat-header-left">
-
-                    <div class="ai-avatar">
-                        K
-                    </div>
+                <div class="chat-header">
 
 
-                    <div>
+                    <div class="chat-header-left">
 
-                        <div class="chat-title">
-                            Koplo IA
+                        <div class="ai-avatar">
+                            K
                         </div>
 
-                        <div class="chat-status">
-                            Assistente financeiro
-                        </div>
 
-                    </div>
+                        <div>
 
-                </div>
+                            <div class="chat-title">
+                                Koplo IA
+                            </div>
 
-
-                <!-- NOVA CONVERSA -->
-
-                <form method="POST">
-
-                    <button
-                        type="submit"
-                        name="nova_conversa"
-                        class="nova-conversa-btn"
-                    >
-                        Nova conversa
-                    </button>
-
-                </form>
-
-
-            </div>
-
-
-            <!-- MENSAGENS -->
-
-            <div class="chat-messages">
-
-
-                <?php if (empty($_SESSION["historico_ia"])): ?>
-
-
-                    <div class="message ai">
-
-                        <div class="message-bubble">
-
-                            Olá! 👋
-
-                            Sou a Koplo IA. Agora consigo analisar seus dados financeiros, como transações, categorias e metas.
-
-                            Pode me perguntar sobre seus gastos, receitas ou objetivos!
-
-                        </div>
-
-                    </div>
-
-
-                <?php else: ?>
-
-
-                    <?php foreach (
-                        $_SESSION["historico_ia"]
-                        as $mensagem
-                    ): ?>
-
-
-                        <?php
-
-                        $classe_mensagem =
-                            $mensagem["role"] === "user"
-                            ? "user"
-                            : "ai";
-
-                        ?>
-
-
-                        <div
-                            class="message <?= $classe_mensagem ?>"
-                        >
-
-                            <div class="message-bubble">
-
-                                <?= htmlspecialchars(
-                                    $mensagem["content"]
-                                ) ?>
-
+                            <div class="chat-status">
+                                Assistente financeiro
                             </div>
 
                         </div>
 
+                    </div>
 
-                    <?php endforeach; ?>
 
+                    <!-- NOVA CONVERSA -->
+
+                    <form method="POST">
+
+                        <button
+                            type="submit"
+                            name="nova_conversa"
+                            class="nova-conversa-btn">
+                            Nova conversa
+                        </button>
+
+                    </form>
+
+
+                </div>
+
+
+                <!-- MENSAGENS -->
+
+                <!-- MENSAGENS -->
+                <div class="chat-messages">
+
+                    <?php if (empty($_SESSION["historico_ia"])): ?>
+
+                        <!-- MENSAGEM INICIAL DA IA -->
+                        <div class="message ai">
+                            <div class="message-avatar ai-icon">K</div>
+                            <div class="message-content">
+                                <span class="message-author">Koplo IA</span>
+                                <div class="message-bubble">
+                                    Olá! Sou a Koplo IA. <br>Agora consigo analisar seus dados financeiros, como transações, categorias e metas. Pode me perguntar sobre seus gastos, receitas ou objetivos!
+                                </div>
+                            </div>
+                        </div>
+
+                    <?php else: ?>
+
+                        <?php foreach ($_SESSION["historico_ia"] as $mensagem): ?>
+
+                            <?php if ($mensagem["role"] === "user"): ?>
+
+                                <!-- MENSAGEM DO USUÁRIO -->
+                                <div class="message user">
+                                    <div class="message-content">
+                                        <span class="message-author"><?= htmlspecialchars($_SESSION["usuario_nome"] ?? "Você") ?></span>
+                                        <div class="message-bubble">
+                                            <?= htmlspecialchars($mensagem["content"]) ?>
+                                        </div>
+                                    </div>
+                                    <div class="message-avatar user-icon">
+                                        <!-- Ícone vetorial SVG do Usuário -->
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="12" cy="7" r="4"></circle>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                            <?php else: ?>
+
+                                <!-- MENSAGEM DA IA -->
+                                <div class="message ai">
+                                    <div class="message-avatar ai-icon">K</div>
+                                    <div class="message-content">
+                                        <span class="message-author">Koplo IA</span>
+                                        <div class="message-bubble">
+                                            <?= htmlspecialchars(trim($mensagem["content"])) ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            <?php endif; ?>
+
+                        <?php endforeach; ?>
+
+                    <?php endif; ?>
+
+                </div>
+
+
+                <!-- ERRO -->
+
+                <?php if ($erro_ia !== ""): ?>
+
+                    <div class="erro-ia">
+
+                        <?= $erro_ia ?>
+
+                    </div>
 
                 <?php endif; ?>
 
 
-            </div>
+                <!-- INPUT -->
+
+                <div class="chat-input-area">
 
 
-            <!-- ERRO -->
+                    <form
+                        method="POST"
+                        class="chat-form">
 
-            <?php if ($erro_ia !== ""): ?>
+                        <input
+                            type="text"
+                            name="pergunta"
+                            class="chat-input"
+                            placeholder="Digite sua pergunta..."
+                            autocomplete="off">
 
-                <div class="erro-ia">
 
-                    <?= $erro_ia ?>
+                        <button
+                            type="submit"
+                            name="enviar_pergunta"
+                            class="chat-send">
+                            Enviar
+                        </button>
+
+                    </form>
 
                 </div>
 
-            <?php endif; ?>
-
-
-            <!-- INPUT -->
-
-            <div class="chat-input-area">
-
-
-                <form
-                    method="POST"
-                    class="chat-form"
-                >
-
-                    <input
-                        type="text"
-                        name="pergunta"
-                        class="chat-input"
-                        placeholder="Digite sua pergunta..."
-                        autocomplete="off"
-                    >
-
-
-                    <button
-                        type="submit"
-                        name="enviar_pergunta"
-                        class="chat-send"
-                    >
-                        Enviar
-                    </button>
-
-                </form>
 
             </div>
 
+        </main>
 
-        </div>
-
-    </main>
-
-</div>
+    </div>
 
 
 </body>
