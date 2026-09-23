@@ -4,8 +4,8 @@
 **Objetivo:** Desenvolver uma aplicação web de controle financeiro que não apenas registre receitas e despesas, mas que também forneça análises e conselhos personalizados utilizando Inteligência Artificial.
 
 ## Modelo de Inteligência Artificial Utilizado
-**Modelo:** `google/gemma-2-27b-it`
-**Link no Hugging Face:** [https://huggingface.co/google/gemma-2-27b-it](https://huggingface.co/google/gemma-2-27b-it)
+**Modelo:** `Qwen/Qwen2.5-Coder-32B-Instruct`
+**Link no Hugging Face:** (https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct)
 **Como funciona:** A aplicação compila os dados financeiros do usuário (totais de receitas, despesas e saldo) e envia um prompt estruturado em formato JSON via cURL para a Inference API do Hugging Face. O modelo do Google processa os números e retorna conselhos práticos e personalizados.
 
 ### Exemplo de Fluxo:
